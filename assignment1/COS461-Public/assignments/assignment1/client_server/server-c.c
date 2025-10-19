@@ -1,9 +1,3 @@
-/*****************************************************************************
- * server-c.c
- * Name:
- * NetId:
- *****************************************************************************/
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -89,8 +83,6 @@ int server(char *server_port)
         return 1;
     }
 
-    printf("Server listening on port %d\n", port);
-
     // 循环接受客户端连接
     while (1)
     {
@@ -105,23 +97,18 @@ int server(char *server_port)
             continue; // 继续处理下一个连接请求
         }
 
-        // 获取客户端信息
-        char client_ip[INET_ADDRSTRLEN];
-        inet_ntop(AF_INET, &(client_addr.sin_addr), client_ip, INET_ADDRSTRLEN);
-        printf("Client connected: %s:%d\n", client_ip, ntohs(client_addr.sin_port));
-
         // 接收并处理客户端消息
         char buffer[RECV_BUFFER_SIZE];
         ssize_t bytes_received;
 
-        while ((bytes_received = recv(client_fd, buffer, RECV_BUFFER_SIZE - 1, 0)) > 0)
+        while ((bytes_received = recv(client_fd, buffer, RECV_BUFFER_SIZE, 0)) > 0)
         {
-            buffer[bytes_received] = '\0'; // 确保字符串结束
-            printf("%s", buffer);          // 输出到标准输出
+            // 使用fwrite直接写入二进制数据到stdout，而不是当作字符串处理
+            fwrite(buffer, 1, bytes_received, stdout);
             fflush(stdout);
         }
 
-        // 处理接收错误
+        // 处理接收错误（保持错误输出）
         if (bytes_received < 0)
         {
             perror("recv");

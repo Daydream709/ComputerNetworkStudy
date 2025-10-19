@@ -1,9 +1,3 @@
-###############################################################################
-# client-python.py
-# Name:
-# NetId:
-###############################################################################
-
 import sys
 import socket
 
@@ -20,22 +14,26 @@ def client(server_ip, server_port):
         server_address = (server_ip, server_port)
         sockfd.connect(server_address)
 
-        # 从标准输入读取数据并发送到服务器
+        # 从标准输入读取二进制数据并发送到服务器
         while True:
-            data = sys.stdin.read(SEND_BUFFER_SIZE)
+            # 直接读取二进制数据而不是文本
+            data = sys.stdin.buffer.read(SEND_BUFFER_SIZE)
             if not data:
                 break
 
             # 发送数据到服务器
-            bytes_sent = sockfd.send(data.encode("utf-8"))
+            bytes_sent = sockfd.send(data)
 
             # 检查是否完整发送了数据
             if bytes_sent != len(data):
-                print(f"Partial send: sent {bytes_sent} of {len(data)} bytes", file=sys.stderr)
+                print(
+                    "Partial send: sent " + str(bytes_sent) + " of " + str(len(data)) + " bytes",
+                    file=sys.stderr,
+                )
                 break
 
     except Exception as e:
-        print(f"Client error: {e}", file=sys.stderr)
+        print("Client error: " + str(e), file=sys.stderr)
         return 1
 
     finally:

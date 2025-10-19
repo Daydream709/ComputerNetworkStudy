@@ -26,12 +26,10 @@ def server(server_port):
 
         # 开始监听连接
         sockfd.listen(QUEUE_LENGTH)
-        print(f"Server listening on port {server_port}")
 
         while True:
             # 接受客户端连接
             client_fd, client_addr = sockfd.accept()
-            print(f"Client connected: {client_addr[0]}:{client_addr[1]}")
 
             try:
                 # 接收并处理客户端消息
@@ -41,21 +39,18 @@ def server(server_port):
                         break
 
                     # 输出到标准输出
-                    sys.stdout.write(data.decode("utf-8"))
+                    sys.stdout.buffer.write(data)
                     sys.stdout.flush()
 
             except Exception as e:
-                print(f"Error receiving data: {e}")
+                print("Error receiving data: " + str(e))
 
             finally:
                 # 关闭客户端连接
                 client_fd.close()
 
-    except KeyboardInterrupt:
-        print("\nServer shutting down...")
-
     except Exception as e:
-        print(f"Server error: {e}")
+        print("Server error: " + str(e))
 
     finally:
         # 关闭服务器套接字
