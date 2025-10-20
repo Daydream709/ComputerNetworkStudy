@@ -3,6 +3,7 @@
     "*.js": "javascript",
     "stdio.h": "c",
     "stdlib.h": "c",
-    "types.h": "c"
+    "types.h": "c",
+    "unistd.h": "c"
   }
 }
