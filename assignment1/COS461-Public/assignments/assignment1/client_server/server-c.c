@@ -14,7 +14,7 @@
 #define QUEUE_LENGTH 10
 #define RECV_BUFFER_SIZE 2048
 
-int sockfd; // 全局socket描述符，用于信号处理时关闭
+int sockfd;
 
 /* TODO: server()
  * Open socket and wait for client to connect
@@ -103,7 +103,6 @@ int server(char *server_port)
 
         while ((bytes_received = recv(client_fd, buffer, RECV_BUFFER_SIZE, 0)) > 0)
         {
-            // 使用fwrite直接写入二进制数据到stdout，而不是当作字符串处理
             fwrite(buffer, 1, bytes_received, stdout);
             fflush(stdout);
         }
@@ -118,7 +117,6 @@ int server(char *server_port)
         close(client_fd);
     }
 
-    // 正常不会执行到这里
     close(sockfd);
     return 0;
 }

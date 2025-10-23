@@ -61,19 +61,22 @@ int client(char *server_ip, char *server_port)
   // 从标准输入读取数据并发送到服务器
   while ((bytes_read = read(STDIN_FILENO, buffer, SEND_BUFFER_SIZE)) > 0)
   {
-    ssize_t bytes_sent = send(sockfd, buffer, bytes_read, 0);
-    if (bytes_sent < 0)
+    ssize_t total_bytes_sent = 0;
+
+    // 循环发送直到所有数据都被发送出去
+    while (total_bytes_sent < bytes_read)
     {
-      perror("send");
-      close(sockfd);
-      return 1;
-    }
-    // 检查是否完整发送了数据
-    if (bytes_sent != bytes_read)
-    {
-      fprintf(stderr, "Partial send: sent %zd of %zd bytes\n", bytes_sent, bytes_read);
-      close(sockfd);
-      return 1;
+      ssize_t bytes_sent = send(sockfd, buffer + total_bytes_sent,
+                                bytes_read - total_bytes_sent, 0);
+
+      if (bytes_sent < 0)
+      {
+        perror("send");
+        close(sockfd);
+        return 1;
+      }
+
+      total_bytes_sent += bytes_sent;
     }
   }
 

@@ -16,21 +16,20 @@ def client(server_ip, server_port):
 
         # 从标准输入读取二进制数据并发送到服务器
         while True:
-            # 直接读取二进制数据而不是文本
             data = sys.stdin.buffer.read(SEND_BUFFER_SIZE)
             if not data:
                 break
 
             # 发送数据到服务器
-            bytes_sent = sockfd.send(data)
-
-            # 检查是否完整发送了数据
-            if bytes_sent != len(data):
-                print(
-                    "Partial send: sent " + str(bytes_sent) + " of " + str(len(data)) + " bytes",
-                    file=sys.stderr,
-                )
-                break
+            # 替换现有的发送逻辑
+            while data:
+                bytes_sent = sockfd.send(data)
+                if bytes_sent < len(data):
+                    # 如果只发送了部分数据，保存剩余数据并继续发送
+                    data = data[bytes_sent:]
+                else:
+                    # 全部发送成功，跳出循环
+                    break
 
     except Exception as e:
         print("Client error: " + str(e), file=sys.stderr)
