@@ -1,0 +1,12 @@
+- UDP/TCP
+- UDP复用
+- DNS
+- 本地DNS，根DNS，顶级DNS，权限
+- ipv4地址格式，CIDR
+- 子网划分，构造超网
+- TCP连接建立与释放（三次握手，四次挥手）
+- TCP连接管理，可靠传输，流量控制，拥塞控制
+- ip与MAC地址的匹配转换
+- 获取ip，NAT
+- 应用层：SMTP邮件发送
+- BGP边界网关协议，域内域间，RIP，OSPF
